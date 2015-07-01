@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Peerfinder</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="leaflet-0.7.3.css">
+    <script src="leaflet-0.7.3.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <p>
+        Kein Freifunk, denn es sind keine Knoten in der Nähe?
+      </p>
+    </header>
+    
+    <article id="submission">
+      <form>
+        <h2>Trag dich ein!</h2>
+
+        <div id="position">
+          <img src="routeur.png">
+          <p>
+            <label for="lat">Breite:</label>
+            <input id="lat" name="lat" size="5" style="margin-right: 1em">
+            <label for="lon">Länge:</label>
+            <input id="lon" name="lon" size="5">
+          </p>
+        </div>
+
+        <fieldset>
+          <h3>
+            <label for="ele">Höhe:</label>
+          </h3>
+          <select id="ele" name="ele">
+            <option value="0">Keller</option>
+            <option value="1">Erdgeschoß</option>
+            <option value="2" selected>1. Stock</option>
+            <option value="3">2. Stock</option>
+            <option value="4">3. Stock</option>
+            <option value="5">4. Stock</option>
+            <option value="6">5. Stock</option>
+            <option value="7">Über Dächern</option>
+          </select>
+
+          <h3>Fensterzugang:</h3>
+          <div class="grid3">
+            <p>
+              <label>
+                <input type="checkbox" name="nw" value="y" checked> NW
+              </label>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" name="n" value="y" checked> N
+              </label>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" name="no" value="y" checked> NO
+              </label>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" name="w" value="y" checked> W
+              </label>
+            </p>
+            <p>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" name="o" value="y" checked> O
+              </label>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" name="sw" value="y" checked> SW
+              </label>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" name="s" value="y" checked> S
+              </label>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" name="so" value="y" checked> SO
+              </label>
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset class="left radios">
+          <p>
+            <input type="radio" id="kind1" name="kind" value="running">
+            <label for="kind1">
+              Zeig meinen offenen Access Point auf der Karte
+            </label>
+          </p>
+          <div id="kind1options" class="option">
+            <p>
+              <input type="radio" id="running1" name="running" value="freifunk" checked>
+              <label for="running1">
+                Freifunk
+              </label>
+            </p>
+            <p>
+              <input type="radio" id="running2" name="running" value="other">
+              <label for="running2">Anders</label><span id="running2options">:
+                <input id="other_ssid" name="other_ssid" placeholder="Netzname">
+              </span>
+            </p>
+          </div>
+          <p>
+            <input type="radio" id="kind2" name="kind" value="running" checked>
+            <label for="kind2">
+              Zeig mich als Interessierter auf der Karte
+            </label>
+          </p>
+          <p>
+            <input type="radio" id="kind3" name="kind" value="running">
+            <label for="kind3">
+              Zeig mich nicht, aber sende meine E-Mail-Adresse an
+              Interessierte in der Umgebung
+            </label>
+          </p>
+        </fieldset>
+
+        <fieldset class="left">
+          <p>
+            <input type="checkbox" id="internet" name="internet" value="y">
+            <label for="internet">
+              Internetanschluß nutzbar
+            </label>
+          </p>
+
+          <p>
+            <label for="email">E-Mail:</label>
+            <input id="email" name="email" type="email" placeholder="du@beispiel.de">
+          </p>
+        </fieldset>
+
+        <input type="submit" class="button" value="Absenden">
+      </form>
+    </article>
+
+    <article>
+      <div id="map">
+      </div>
+    </article>
+
+    <footer>
+      <ul>
+        <li>
+          <a>Datenschutz</a>
+        </li>
+        <li>
+          <a>Impressum</a>
+        </li>
+        <li>
+          <a>Freifunk Dresden</a>
+        </li>
+    </footer>
+
+    <script type="text/javascript">
+      var map = L.map($('#map')[0])
+      map.setView([51.0474, 13.7464], 10);
+      map.addLayer(
+        L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "OpenStreetMap.org",
+          maxZoom: 18
+        })
+      )
+
+      function updateKind1() {
+        var options = $('#kind1options')
+        if ($('#kind1:checked').val()) {
+          options.slideDown(100);
+        } else {
+          options.slideUp(100);
+        }
+      }
+      updateKind1()
+      for(var i = 1; i <= 3; i++) {
+        $('#kind' + i).change(updateKind1)
+      }
+
+      function updateRunning2() {
+        var options = $('#running2options')
+        if ($('#running2:checked').val()) {
+          options.fadeIn(200);
+        } else {
+          options.fadeOut(100);
+        }
+      }
+      updateRunning2()
+      for(var i = 1; i <= 2; i++) {
+        $('#running' + i).change(updateRunning2)
+      }
+    </script>
+  </body>
+</html>
